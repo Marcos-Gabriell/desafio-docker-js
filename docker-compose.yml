@@ -14,7 +14,7 @@ services:
     build: ./node
     volumes:
       - ./node:/usr/src/app
-      - /usr/src/app/node_modules   # Impede que o node_modules local sobrescreva o do container
+      - /usr/src/app/node_modules  
     command: node index.js
     depends_on:
       db:
