@@ -14,9 +14,11 @@ services:
     build: ./node
     volumes:
       - ./node:/usr/src/app
+      - /usr/src/app/node_modules   # Impede que o node_modules local sobrescreva o do container
     command: node index.js
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: mysql:5.7
@@ -25,6 +27,12 @@ services:
       MYSQL_DATABASE: nodedb
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   db_data:
